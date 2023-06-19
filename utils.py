@@ -117,14 +117,18 @@ def linear_to_polar_tf(img_input, radius):
     return out_image
 
 
-def square_dims_vector(vector, ratio_w_h=1):
-    n = vector.size
-    divs = np.array(sympy.divisors(n))
-    dist_to_root = np.abs(divs-np.sqrt(n)*ratio_w_h)
+
+def square_dims(size, ratio_w_h=1):
+    divs = np.array(sympy.divisors(size))
+    dist_to_root = np.abs(divs-np.sqrt(size)*ratio_w_h)
     i = np.argmin(dist_to_root)
     x_size = int(divs[i])
-    y_size = n//x_size
+    y_size = size//x_size
     return (x_size, y_size) if x_size < y_size else (y_size, x_size)
+
+
+def square_dims_vector(vector, ratio_w_h=1):
+    return np.reshape(vector.copy(), square_dims(vector.size, ratio_w_h))
 
 
 @keras.utils.register_keras_serializable()
